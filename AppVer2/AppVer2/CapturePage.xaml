@@ -1,0 +1,39 @@
+﻿<Page
+    x:Class="AppVer2.CapturePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppVer2"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Page_Loaded">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="277*"/>
+            <ColumnDefinition Width="123*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--<CaptureElement x:Name="PhotoPreview" Height="480" Margin="0,0,0,160"/>
+        <Button x:Name="Start_Button" Click="Start_Button_Click" Height="72" Width="156" Content="Start" Margin="26,475,0,93"/>
+        <Button x:Name="Stop_Button" Click="Stop_Button_Click" Height="72" Width="156" Content="Stop" Margin="218,475,0,93"/>
+        <Button x:Name="Capture_Button_Copy" Click="Capture_Button_Click" Height="72" Width="156" Content="Capture" Margin="26,548,0,20"/>-->
+
+
+        <CaptureElement x:Name="capturePreview" Margin="0,0,0,378" Grid.ColumnSpan="2" />
+        <Image x:Name="imagePreivew" Margin="0,262,0,115" Grid.ColumnSpan="2" />
+
+
+
+        <!--<Button Click="Save_Picture_librory" Content="Save Picture" Margin="229,580,0,0" Height="60" Width="161" />-->
+        <Button Click="Capture_Photo_Click" Content="" Margin="176,0,24.667,-9" Height="66" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <Button.Background>
+                <ImageBrush Stretch="Fill" ImageSource="Images/camera-icon.png"/>
+            </Button.Background>
+        </Button>
+
+
+
+    </Grid>
+</Page>
+
