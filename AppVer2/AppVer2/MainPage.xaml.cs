@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
@@ -24,6 +26,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using WindowsPreview.Media.Ocr;
+using Newtonsoft.Json;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -278,6 +281,30 @@ namespace AppVer2
                     }
 
                     txtResult.Text = extractedText;
+
+                    //translate found text
+                    string yandexApiKey = "trnsl.1.1.20161219T152557Z.390c84297f36ab8b.09d9e851c72d37d3f3ccf9fbda2b48a6a01a2a88";
+                    string apiUrl = "https://translate.yandex.net/api/v1.5/tr.json/translate?key={0}&text={1}&lang={2}&format=plain";
+                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(string.Format(apiUrl, yandexApiKey, extractedText, "vi"));
+                    request.Method = "GET";
+                    using (var response = (HttpWebResponse)(await Task<WebResponse>.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null)))
+                    {
+                        Stream stream = response.GetResponseStream();
+                        StreamReader reader = new StreamReader(stream);
+                        string htmlText = reader.ReadToEnd();
+                        TranslateResponse translate = JsonConvert.DeserializeObject<TranslateResponse>(htmlText);
+
+                        //not show translate if it's vietnamese or translate failed
+                        if(translate.code == 200 && !translate.lang.StartsWith("vi"))
+                        {
+                            foreach(string text in translate.text)
+                            {
+                                txtResult.Text += text;
+                            }
+                        }
+
+                    }
+                    //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
                 }
                 else

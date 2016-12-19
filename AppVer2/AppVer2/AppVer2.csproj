@@ -91,6 +91,7 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubPage\SendEmailPage.xaml.cs">
       <DependentUpon>SendEmailPage.xaml</DependentUpon>
@@ -153,6 +154,10 @@
   <ItemGroup>
     <Reference Include="DrawerLayout, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DrawerLayout.1.0.4\lib\DrawerLayout.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="WindowsPreview.Media.Ocr, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
