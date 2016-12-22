@@ -27,6 +27,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using WindowsPreview.Media.Ocr;
 using Newtonsoft.Json;
+using System.Windows;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -37,7 +38,8 @@ namespace AppVer2
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private WriteableBitmap wbBitmap = null; 
+        private WriteableBitmap wbBitmap = null;
+        private string translatedText = "";
         CoreApplicationView view;
 
         public MainPage()
@@ -192,125 +194,16 @@ namespace AppVer2
 
         private async void ConvertButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (wbBitmap == null)
+            ExtractTextOcr extracter = new ExtractTextOcr();
+            string extractedText = await extracter.ExtractText(wbBitmap, imgSource);
+            txtResult.Text = extractedText;
+
+            if(!string.IsNullOrEmpty(extractedText) && extractedText != "No text.")
             {
-                txtResult.Text = "Please select an image to convert.";
-            }
-            else
-            {
-                OcrEngine ocrEngine = new OcrEngine(OcrLanguage.English);
-                // Supported image dimensions are between 40 and 2600 pixels.   
-                if (wbBitmap.PixelHeight < 40 ||
-                    wbBitmap.PixelHeight > 2600 ||
-                    wbBitmap.PixelWidth < 40 ||
-                    wbBitmap.PixelWidth > 2600)
-                {
-                    txtResult.Text = "Image size is not supported." +
-                                        Environment.NewLine +
-                                        "Loaded image size is " + wbBitmap.PixelWidth + "x" + wbBitmap.PixelHeight + "." +
-                                        Environment.NewLine +
-                                        "Supported image dimensions are between 40 and 2600 pixels.";
-
-                    return;
-                }
-
-                // This main API call to extract text from image.   
-                OcrResult ocrResult = await ocrEngine.RecognizeAsync((uint)wbBitmap.PixelHeight, (uint)wbBitmap.PixelWidth, wbBitmap.PixelBuffer.ToArray());
-
-                // OCR result does not contain any lines, no text was recognized.    
-                if (ocrResult.Lines != null)
-                {
-                    // Used for text overlay.   
-                    // Prepare scale transform for words since image is not displayed in original format.   
-                    var scaleTrasform = new ScaleTransform
-                    {
-                        CenterX = 0,
-                        CenterY = 0,
-                        ScaleX = imgSource.ActualWidth / wbBitmap.PixelWidth,
-                        ScaleY = imgSource.ActualHeight / wbBitmap.PixelHeight,
-                    };
-
-                    if (ocrResult.TextAngle != null)
-                    {
-
-                        imgSource.RenderTransform = new RotateTransform
-                        {
-                            Angle = (double)ocrResult.TextAngle,
-                            CenterX = imgSource.ActualWidth / 2,
-                            CenterY = imgSource.ActualHeight / 2
-                        };
-                    }
-
-                    string extractedText = "";
-                    // Iterate over recognized lines of text.   
-                    foreach (var line in ocrResult.Lines)
-                    {
-                        // Iterate over words in line.   
-                        foreach (var word in line.Words)
-                        {
-                            var originalRect = new Rect(word.Left, word.Top, word.Width, word.Height);
-                            var overlayRect = scaleTrasform.TransformBounds(originalRect);
-
-                            var wordTextBlock = new TextBlock()
-                            {
-                                Height = overlayRect.Height,
-                                Width = overlayRect.Width,
-                                FontSize = overlayRect.Height * 1.2,
-                                Text = word.Text,
-
-                            };
-
-                            // Define position, background, etc.   
-                            var border = new Border()
-                            {
-                                Margin = new Thickness(overlayRect.Left, overlayRect.Top, 0, 0),
-                                Height = overlayRect.Height,
-                                Width = overlayRect.Width,
-                                Background = new SolidColorBrush(Colors.Orange),
-                                Opacity = 0.5,
-                                HorizontalAlignment = HorizontalAlignment.Left,
-                                VerticalAlignment = VerticalAlignment.Top,
-                                Child = wordTextBlock,
-
-                            };
-
-                            // Put the filled textblock in the results grid.   
-                            extractedText += word.Text + " ";
-                        }
-                        extractedText += Environment.NewLine;
-                    }
-
-                    txtResult.Text = extractedText;
-
-                    //translate found text
-                    string yandexApiKey = "trnsl.1.1.20161219T152557Z.390c84297f36ab8b.09d9e851c72d37d3f3ccf9fbda2b48a6a01a2a88";
-                    string apiUrl = "https://translate.yandex.net/api/v1.5/tr.json/translate?key={0}&text={1}&lang={2}&format=plain";
-                    HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(string.Format(apiUrl, yandexApiKey, extractedText, "vi"));
-                    request.Method = "GET";
-                    using (var response = (HttpWebResponse)(await Task<WebResponse>.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null)))
-                    {
-                        Stream stream = response.GetResponseStream();
-                        StreamReader reader = new StreamReader(stream);
-                        string htmlText = reader.ReadToEnd();
-                        TranslateResponse translate = JsonConvert.DeserializeObject<TranslateResponse>(htmlText);
-
-                        //not show translate if it's vietnamese or translate failed
-                        if(translate.code == 200 && !translate.lang.StartsWith("vi"))
-                        {
-                            foreach(string text in translate.text)
-                            {
-                                txtResult.Text += text;
-                            }
-                        }
-
-                    }
-                    //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                }
-                else
-                {
-                    txtResult.Text = "No text.";
-                }
+                txtResult.Text += Environment.NewLine;
+                TranslateText translator = new TranslateText();
+                var translateText = await translator.Translate(extractedText, "vi");
+                txtResult.Text += translateText;
             }
         }
 
