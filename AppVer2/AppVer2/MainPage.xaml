@@ -10,136 +10,132 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Page_Loaded">
 
     <Grid x:Name="RootLayout">
+        <Grid.Background>
+            <ImageBrush ImageSource="ms-appx:///Images/background.jpg"></ImageBrush>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <!-- Title Bar -->
-        <Grid x:Name="TitleBar" Background="#00ADEF" Grid.Row ="0" Height="60">
+        <Grid x:Name="TitleBar" Background="Transparent" Grid.Row ="0" Height="48">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Image Margin="5"  x:Name="DrawerIcon"  Grid.Column="0" Source="/Images/ic_drawer.png" HorizontalAlignment="Left" Tapped="DrawerIcon_Tapped" />
+            <Image Margin="10"  x:Name="DrawerIcon"  Grid.Column="0" Source="/Images/ic_drawer.png" HorizontalAlignment="Left" Tapped="DrawerIcon_Tapped" />
             <TextBlock Grid.Column="1" Text="Optical Character Recognition" Foreground="White" VerticalAlignment="Center" FontSize="18"/>
         </Grid>
         <!-- Drawer Layout -->
         <drawerLayout:DrawerLayout Grid.Row="1"  x:Name="DrawerLayout">
-            <Grid x:Name="MainFragment" d:IsHidden="True">
-                <Grid.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="Black" Offset="0"/>
-                        <GradientStop Color="White" Offset="1"/>
-                    </LinearGradientBrush>
-                </Grid.Background>
+            <Grid x:Name="MainFragment">
                 <!-- Main Content goes here -->
                 <Grid VerticalAlignment="Stretch" x:Name="HomeFragment">
-                    <Grid.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                            <GradientStop Color="#FF4E4EB6" Offset="0.141"/>
-                            <GradientStop Color="#FFC2C2E4" Offset="0.454"/>
-                        </LinearGradientBrush>
-                    </Grid.Background>
+
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="4*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="5*"/>
+                        <RowDefinition Height="9*"/>
+                        <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-
-                    <Border Margin="10,10,10,0" Grid.Row="0" Grid.Column="0" BorderBrush="#FFAA1919" BorderThickness="2">
-                        <Image x:Name="imgSource"  Source="Assets/SplashScreen.png" Stretch="Fill"/>
-                    </Border>
 
 
-                    <Button x:Name="btConvert" Content="Convert" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="1" VerticalAlignment="Stretch"
-                        Tapped="ConvertButton_Tapped" Margin="299,0.333,11,0"    >
-                        <Button.Background>
-                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="Black" Offset="0"/>
-                                <GradientStop Color="#FF5B9CEA" Offset="0.51"/>
-                            </LinearGradientBrush>
-                        </Button.Background>
-                    </Button>
+                    <!-- image -->
+                    <StackPanel x:Name="stackPanelImage" Margin="0,10,0,10" Grid.Row="0">
+                        <ScrollViewer ZoomMode="Enabled" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" 
+                                      Height="{Binding Path=ActualHeight,ElementName=stackPanelImage}">
+                            <Image x:Name="imgSource" Source="Assets/Logo.png"/>
+                        </ScrollViewer>
+                    </StackPanel>
 
-                    <ScrollViewer Margin="10,0,10,10" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="White">
-                        <Border BorderThickness="2" BorderBrush="#FFAA1919">
-                            <TextBlock x:Name="txtResult" Margin="10,10,10,10" TextWrapping="Wrap" FontSize="13" Foreground="Black" Text="Result"/>
-                        </Border>
-                    </ScrollViewer>
+
+                    <StackPanel Grid.Row="1" Background="White" Margin="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Button Style="{StaticResource circleButton}" Grid.Column="1" Margin="0">
+                                <Image Height="28" Source="ms-appx:///Images/open-file-icon.png" Tapped="OpenFileButton_Tapped"></Image>
+                            </Button>
+                            <Button Style="{StaticResource circleButton}" Grid.Column="2" Margin="0">
+                                <Image Height="24" Source="ms-appx:///Images/crop-icon.png"></Image>
+                            </Button>
+                            <Button Style="{StaticResource circleButton}" Grid.Column="3" Margin="0">
+                                <Image Height="32" Source="ms-appx:///Images/arrow-right.png"
+                                       Tapped="ConvertButton_Tapped"/>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+
                 </Grid>
             </Grid>
 
-            <Grid x:Name="ListFragment">
-                <Grid.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#FF4E4EB6" Offset="0.141"/>
-                        <GradientStop Color="#FFC2C2E4" Offset="0.454"/>
-                    </LinearGradientBrush>
-                </Grid.Background>
-                <Grid Margin="10,10,10,10">
+            <Grid x:Name="ListFragment" Background="Lavender" d:IsHidden="True">
+                <Grid Margin="10,10,10,0">
+                    <Grid.Resources>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Black"></Setter>
+                            <Setter Property="FontSize" Value="15"></Setter>
+                            <Setter Property="Margin" Value="16,16,0,0"></Setter>
+                        </Style>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Margin" Value="8,0,0,0"></Setter>
+                        </Style>
+                        <Style TargetType="Image" x:Key="icon">
+                            <Setter Property="Width" Value="24"></Setter>
+                            <Setter Property="Height" Value="24"></Setter>
+                        </Style>
+                    </Grid.Resources>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="64" />
-                        <RowDefinition Height="64" />
-                        <RowDefinition Height="64" />
-                        <RowDefinition Height="64" />
-                        <RowDefinition Height="64" />
-                        <RowDefinition Height="64" />
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="48" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="64"/>
+                        <ColumnDefinition Width="48"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
 
-                    <Button Grid.Column="0" Grid.Row="0" Width="64"
-                        Tapped="OpenFileButton_Tapped" Height="65" Margin="0,8,0,-9">
-                        <Button.Background>
-                            <ImageBrush ImageSource="ms-appx:///Images/open-file-icon.png"/>
-                        </Button.Background>
-                    </Button>
-                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="0" Text="Open File" FontSize="15" Margin="17.833,29,-17.5,17.167"/>
+                    <Image Tapped="OpenFileButton_Tapped" Source="ms-appx:///Images/open-file-icon.png" Style="{StaticResource icon}"></Image>
+                    <StackPanel Tapped="OpenFileButton_Tapped" Grid.Row="0" Grid.Column="1" Margin="16,0,0,0">
+                        <TextBlock Text="Open file"/>
+                    </StackPanel>
 
 
-                    <Button x:Name="Camera" Grid.Column="0" Grid.Row="1"
-            	    Width="64" Height="65" Click="Camera_Click" Margin="0,7.833,0,-8.667">
-                        <Button.Background>
-                            <ImageBrush Stretch="Fill" ImageSource="ms-appx:///Images/camera-icon.png"/>
-                        </Button.Background>
-                    </Button>
-                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="1" Text="Camera" FontSize="15" Margin="17.833,28.833,-17.5,17.333"/>
-
-                    <Button Grid.Column="0" Grid.Row="2" Tapped="SaveButton_Tapped"
-            	    Height="65" Width="64" Margin="0,7.667,0,-8.5">
-                        <Button.Background>
-                            <ImageBrush Stretch="Fill" ImageSource="ms-appx:///Images/Save-icon.png"/>
-                        </Button.Background>
-                    </Button>
-                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" Text="Save" FontSize="15" Margin="17.833,28.667,-17.5,17.5"/>
-
-                    <Button Grid.Column="0" Grid.Row="3" Tapped="SendEmailButton_Tapped"
-            	    Height="64" Width="64" Margin="0,8.5,0,-8.333">
-                        <Button.Background>
-                            <ImageBrush ImageSource="ms-appx:/Images/email-icon.png"/>
-                        </Button.Background>
-                    </Button>
-                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="3" Text="Send Email" FontSize="15" Margin="17.833,29.5,-17.5,16.667"/>
+                    <Image Height="28" Source="ms-appx:///Images/camera-icon.png" Grid.Row="1" Style="{StaticResource icon}"></Image>
+                    <StackPanel Tapped="Camera_Click" Grid.Column="1" Margin="16,0,0,0" Grid.Row="1">
+                        <TextBlock Text="Camera"/>
+                    </StackPanel>
 
 
+                    <Image Height="24" Tapped="SaveButton_Tapped" Source="ms-appx:///Images/Save-icon.png" Grid.Row="2" Style="{StaticResource icon}"></Image>
+                    <StackPanel Tapped="SaveButton_Tapped" Grid.Row="2" Grid.Column="1" Margin="16,0,0,0" Width="{Binding Path=ActualWidth,ElementName=ListFragment}">
+                        <TextBlock Text="Save"/>
+                    </StackPanel>
 
-                    <Button Grid.Column="0" Grid.Row="4"
-            	    Height="65" Width="64" Margin="0,8.333,0,-9.167">
-                        <Button.Background>
-                            <ImageBrush ImageSource="ms-appx:/Images/Actions-help-about-icon.png"/>
-                        </Button.Background>
-                    </Button>
-                    <TextBlock VerticalAlignment="Center" Grid.Column="1" Grid.Row="4" Text="Information" FontSize="15" Margin="17.833,29.333,-17.5,16.833"/>
+
+                    <Image Height="24" Tapped="SendEmailButton_Tapped" Source="ms-appx:///Images/email-icon.png" Grid.Row="3" Style="{StaticResource icon}"></Image>
+                    <StackPanel Tapped="SendEmailButton_Tapped" Grid.Column="1" Grid.Row="3" Margin="16,0,0,0">
+                        <TextBlock Text="Send email"/>
+                    </StackPanel>
+
+
+                    <Image Tapped="SendEmailButton_Tapped" Source="ms-appx:///Images/language-icon.png" Grid.Row="4" Style="{StaticResource icon}"></Image>
+                    <ComboBox SelectionChanged="ComboBox_SelectionChanged" Grid.Row="4" Grid.Column="1" Loaded="ComboBox_Loaded" Margin="16,0,0,-300"
+                       Foreground="Black" FontSize="14"  BorderThickness="0" Background="Transparent" />
 
                 </Grid>
+
+
             </Grid>
+
         </drawerLayout:DrawerLayout>
     </Grid>
 </Page>

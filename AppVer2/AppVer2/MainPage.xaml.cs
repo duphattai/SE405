@@ -1,9 +1,8 @@
-﻿using System;
+﻿using AppVer2.SubPage;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
@@ -26,8 +25,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using WindowsPreview.Media.Ocr;
-using Newtonsoft.Json;
-using System.Windows;
+
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=391641
 
@@ -39,8 +37,11 @@ namespace AppVer2
     public sealed partial class MainPage : Page
     {
         private WriteableBitmap wbBitmap = null;
-        private string translatedText = "";
         CoreApplicationView view;
+        private ExtractTextOcr extract = new ExtractTextOcr();
+
+        private OcrLanguage _language;
+        private Dictionary<OcrLanguage, string> _supportLanguage;
 
         public MainPage()
         {
@@ -48,8 +49,14 @@ namespace AppVer2
             DrawerLayout.InitializeDrawerLayout();
             this.NavigationCacheMode = NavigationCacheMode.Required;
             view = CoreApplication.GetCurrentView();
-            
+
             loadImageFromFile();
+
+            _supportLanguage = new Dictionary<OcrLanguage, string>();
+            _supportLanguage.Add(OcrLanguage.English, "English");
+            _supportLanguage.Add(OcrLanguage.Italian, "Italian");
+            _supportLanguage.Add(OcrLanguage.Japanese, "Japanese");
+            _supportLanguage.Add(OcrLanguage.French, "French");
         }
         async void loadImageFromFile()
         {
@@ -69,13 +76,12 @@ namespace AppVer2
         /// </summary>
         /// <param name="e">Event data that describes how this page was reached.
         /// This parameter is typically used to configure the page.</param>
-        async  protected override void OnNavigatedTo(NavigationEventArgs e)
+        async protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
 
             if (GlobalVariable.filecapture != null)
             {
-             
                 var stream = await GlobalVariable.filecapture.OpenAsync(FileAccessMode.Read);
 
                 BitmapImage bitmapImage = new BitmapImage();
@@ -86,35 +92,27 @@ namespace AppVer2
 
                 imgSource.Source = wbBitmap;
             }
-           
         }
 
         void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
             if (DrawerLayout.IsDrawerOpen)
             {
-                
                 e.Handled = true;
-               
+                DrawerLayout.CloseDrawer();
             }
-            else
-            {
-                Application.Current.Exit();
-            }
-        }  
+        }
 
         private void DrawerIcon_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (DrawerLayout.IsDrawerOpen)
             {
-                 DrawerLayout.CloseDrawer();
-            }   
+                DrawerLayout.CloseDrawer();
+            }
             else
             {
                 DrawerLayout.OpenDrawer();
-               
             }
-                
         }
 
         private void OpenFileButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -131,7 +129,7 @@ namespace AppVer2
             filePicker.FileTypeFilter.Add(".jpg");
 
             filePicker.PickSingleFileAndContinue();
-            view.Activated += viewActivated; 
+            view.Activated += viewActivated;
         }
 
         private void SaveButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -150,12 +148,12 @@ namespace AppVer2
 
         private async void viewActivated(CoreApplicationView sender, IActivatedEventArgs args)
         {
-            if(args != null)
+            if (args != null)
             {
-                switch(args.Kind)
+                switch (args.Kind)
                 {
                     case ActivationKind.PickFileContinuation:
-                        
+
                         FileOpenPickerContinuationEventArgs argsOpen = args as FileOpenPickerContinuationEventArgs;
                         if (argsOpen != null)
                         {
@@ -176,50 +174,53 @@ namespace AppVer2
                         }
 
                         break;
-                    case ActivationKind.PickSaveFileContinuation:
-
-                        FileSavePickerContinuationEventArgs argsSave = args as FileSavePickerContinuationEventArgs;
-                        if(argsSave != null)
-                        {
-                            view.Activated -= viewActivated;
-
-                            CachedFileManager.DeferUpdates(argsSave.File);
-                            await FileIO.WriteTextAsync(argsSave.File, txtResult.Text.ToString());
-                            FileUpdateStatus status = await CachedFileManager.CompleteUpdatesAsync(argsSave.File);
-                        }
-                        break;
                 }
             }
         }
 
-        private async void ConvertButton_Tapped(object sender, TappedRoutedEventArgs e)
+        async private void ConvertButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            ExtractTextOcr extracter = new ExtractTextOcr();
-            string extractedText = await extracter.ExtractText(wbBitmap, imgSource);
-            txtResult.Text = extractedText;
+            string text = "";
+            if (wbBitmap == null)
+                text = "Please select an image to convert.";
+            else
+                text = await extract.ExtractText(wbBitmap, imgSource, 16, _language);
 
-            if(!string.IsNullOrEmpty(extractedText) && extractedText != "No text.")
-            {
-                txtResult.Text += Environment.NewLine;
-                TranslateText translator = new TranslateText();
-                var translateText = await translator.Translate(extractedText, "vi");
-                txtResult.Text += translateText;
-            }
+
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(TranslatePage), text));
         }
 
         async private void Camera_Click(object sender, RoutedEventArgs e)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>Frame.Navigate(typeof(CapturePage)));
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(CapturePage)));
         }
 
         async private void SendEmailButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(SubPage.SendEmailPage)));
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(SendEmailPage)));
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
+        }
+
+        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            // ... Get the ComboBox reference.
+            var comboBox = sender as ComboBox;
+
+            // ... Assign the ItemsSource to the List.
+            comboBox.ItemsSource = _supportLanguage.Select(o => o.Value);
+
+            // ... Make the first item selected.
+            comboBox.SelectedIndex = 0;
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string text = (sender as ComboBox).SelectedItem as string;
+            _language = _supportLanguage.FirstOrDefault(x => x.Value == text).Key;
         }
     }
 }

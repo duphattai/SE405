@@ -36,7 +36,6 @@ namespace AppVer2.SubPage
             view = CoreApplication.GetCurrentView();
             attachFiles = new List<StorageFile>();
           
-          
         }
 
         /// <summary>
@@ -124,7 +123,6 @@ namespace AppVer2.SubPage
         private void SendEmailForm_Loaded(object sender, RoutedEventArgs e)
         {
             this.NavigationCacheMode = NavigationCacheMode.Required;
-           
         }
 
     }

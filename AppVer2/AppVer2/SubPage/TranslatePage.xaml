@@ -1,0 +1,128 @@
+﻿<Page
+    x:Class="AppVer2.SubPage.TranslatePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppVer2.SubPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Loaded="Page_Loaded">
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="ms-appx:///Images/background.jpg"/>
+        </Grid.Background>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <!-- Title Bar -->
+        <Grid Background="Transparent" Grid.Row ="0" Height="48">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="1" Margin="10" Text="Optical Character Recognition" Foreground="White" VerticalAlignment="Center" FontSize="18"/>
+        </Grid>
+
+
+        <Grid Grid.Row="1">
+            <!-- Main Content goes here -->
+            <Grid VerticalAlignment="Stretch">
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <!-- image -->
+                <StackPanel Background="White" x:Name="stackPanelImage" Margin="0,10,0,0" Grid.Row="0">
+                    <ScrollViewer ZoomMode="Enabled" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" 
+                                      Height="{Binding Path=ActualHeight,ElementName=stackPanelImage}">
+                        <Image x:Name="imgSource" Source="Assets/Logo.png"/>
+                    </ScrollViewer>
+                </StackPanel>
+
+                <StackPanel x:Name="stackPanelText" Background="#E1ECF4" Margin="0" Grid.Row="1">
+                    <StackPanel.Resources>
+                        <Storyboard x:Name="ShowStoryboard">
+                            <DoubleAnimation EnableDependentAnimation="True"
+				                Storyboard.TargetName="stackPanelTranslate"
+				                Storyboard.TargetProperty="Height"
+				                From="0" To="54"
+				                Duration="0:0:0.5"/>
+                        </Storyboard>
+                        <Storyboard x:Name="HideStoryboard">
+                            <DoubleAnimation EnableDependentAnimation="True"
+				                Storyboard.TargetName="stackPanelTranslate"
+				                Storyboard.TargetProperty="Height"
+				                From="54" To="0"
+				                Duration="0:0:0.5"/>
+                        </Storyboard>
+                    </StackPanel.Resources>
+
+
+                    <!-- translate -->
+                    <StackPanel x:Name="stackPanelTranslate" Height="54" Background="#00ffff" VerticalAlignment="Top" Margin="0" Grid.Row="1">
+                        <Border BorderBrush="CadetBlue" BorderThickness="1">
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="Black" Margin="10" FontSize="18" Text="Translate to"/>
+
+                                <ComboBox  Grid.Column="1" 
+                                           Foreground="Black" FontSize="15"  
+                                           BorderThickness="0" Background="Transparent" />
+
+                                <Image Grid.Column="2" Source="ms-appx:///Images/remove-icon.png" Height="32" Width="32"
+                                       Tapped="CloseTranslate_Tapped"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- text -->
+                    <TextBlock  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                                    TextWrapping="Wrap" FontSize="16"
+                                    Foreground="Black" x:Name="txtResult"
+                                    Text="Result" Padding="10" />
+                </StackPanel>
+
+
+                <StackPanel Grid.Row="2" Background="White" Margin="0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+
+                        
+                        <Button Style="{StaticResource circleButton}" Grid.Column="1" Margin="0">
+                            <Image Height="24" Source="ms-appx:///Images/translate-icon.png" 
+                                 Tapped="Translate_Tapped" ></Image>
+                        </Button>
+                        <Button Style="{StaticResource circleButton}" Grid.Column="2" Margin="0">
+                            <Image Height="24" Source="ms-appx:///Images/save-icon.png"
+                                   Tapped="SaveButton_Tapped"/>
+                        </Button>
+
+                        <Button Style="{StaticResource circleButton}" Grid.Column="3" Margin="0">
+                            <Image Height="32" Source="ms-appx:///Images/email-icon.png"/>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
