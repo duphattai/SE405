@@ -49,10 +49,12 @@
                             </Canvas>
                         </ScrollViewer>
                     </StackPanel>
-
+                    
 
                     <StackPanel Grid.Row="1" Background="White" Margin="0">
                         <Grid>
+                            
+                            
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="3*"/>
                                 <ColumnDefinition Width="3*"/>
