@@ -41,9 +41,12 @@
 
                     <!-- image -->
                     <StackPanel x:Name="stackPanelImage" Margin="0,10,0,10" Grid.Row="0">
-                        <ScrollViewer ZoomMode="Enabled" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" 
+                        <ScrollViewer x:Name="scrollView" ZoomMode="Enabled" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" 
                                       Height="{Binding Path=ActualHeight,ElementName=stackPanelImage}">
-                            <Image x:Name="imgSource" Source="Assets/Logo.png"/>
+                            <Canvas Height="{Binding Path=ActualHeight,ElementName=stackPanelImage}">
+                                <Image x:Name="imgSource" Source="Assets/Logo.png" PointerMoved="imgSource_PointerMoved" PointerPressed="imgSource_PointerPressed" PointerReleased="imgSource_PointerReleased"/>
+                                <Rectangle x:Name="rect" StrokeThickness="4" Stroke="#FFEA18A7"></Rectangle>
+                            </Canvas>
                         </ScrollViewer>
                     </StackPanel>
 
@@ -61,8 +64,8 @@
                             <Button Style="{StaticResource circleButton}" Grid.Column="1" Margin="0">
                                 <Image Height="28" Source="ms-appx:///Images/open-file-icon.png" Tapped="OpenFileButton_Tapped"></Image>
                             </Button>
-                            <Button Style="{StaticResource circleButton}" Grid.Column="2" Margin="0">
-                                <Image Height="24" Source="ms-appx:///Images/crop-icon.png"></Image>
+                            <Button x:Name="btnCrop" Style="{StaticResource circleButton}" Grid.Column="2" Margin="0" Click="btnCrop_Click">
+                                <Image Height="24" Source="ms-appx:///Images/crop-icon.png" Margin="0,10,0,0" VerticalAlignment="Top"></Image>
                             </Button>
                             <Button Style="{StaticResource circleButton}" Grid.Column="3" Margin="0">
                                 <Image Height="32" Source="ms-appx:///Images/arrow-right.png"

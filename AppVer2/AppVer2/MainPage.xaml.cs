@@ -39,6 +39,8 @@ namespace AppVer2
         private WriteableBitmap wbBitmap = null;
         CoreApplicationView view;
         private ExtractTextOcr extract = new ExtractTextOcr();
+        Point Point1, Point2;
+        bool isCropEnable = false;
 
         private OcrLanguage _language;
         private Dictionary<OcrLanguage, string> _supportLanguage;
@@ -57,7 +59,19 @@ namespace AppVer2
             _supportLanguage.Add(OcrLanguage.Italian, "Italian");
             _supportLanguage.Add(OcrLanguage.Japanese, "Japanese");
             _supportLanguage.Add(OcrLanguage.French, "French");
+
+            CompositionTarget.Rendering += new EventHandler<object>(CompositionTarget_Rendering);
         }
+
+        private void CompositionTarget_Rendering(object sender, object e)
+        {
+            //Used for rendering the cropping rectangle on the image.  
+            rect.SetValue(Canvas.LeftProperty, (Point1.X < Point2.X) ? Point1.X : Point2.X);
+            rect.SetValue(Canvas.TopProperty, (Point1.Y < Point2.Y) ? Point1.Y : Point2.Y);
+            rect.Width = (int)Math.Abs(Point2.X - Point1.X);
+            rect.Height = (int)Math.Abs(Point2.Y - Point1.Y);
+        }
+
         async void loadImageFromFile()
         {
             if (GlobalVariable.filecapture != null)
@@ -184,7 +198,27 @@ namespace AppVer2
             if (wbBitmap == null)
                 text = "Please select an image to convert.";
             else
-                text = await extract.ExtractText(wbBitmap, imgSource, 16, _language);
+            {
+                if (isCropEnable)
+                {
+                    if (Point1 != null && Point2 != null && Point1 != Point2)
+                    {
+                        int left = Convert.ToInt32((Point1.X < Point2.X) ? Point1.X : Point2.X);
+                        int top = Convert.ToInt32((Point1.Y < Point2.Y) ? Point1.Y : Point2.Y);
+                        WriteableBitmap wbCropedBitmap = wbBitmap.Crop(left, top, (int)Math.Abs(Point2.X - Point1.X), (int)Math.Abs(Point2.Y - Point1.Y));
+                        text = await extract.ExtractText(wbCropedBitmap, imgSource, 16, _language);
+                    }
+                    else
+                    {
+                        text = await extract.ExtractText(wbBitmap, imgSource, 16, _language);
+                    }
+                }
+                else
+                {
+                    text = await extract.ExtractText(wbBitmap, imgSource, 16, _language);
+                }
+            }
+
 
 
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(TranslatePage), text));
@@ -221,6 +255,39 @@ namespace AppVer2
         {
             string text = (sender as ComboBox).SelectedItem as string;
             _language = _supportLanguage.FirstOrDefault(x => x.Value == text).Key;
+        }
+
+        private void imgSource_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if(isCropEnable)
+            {
+                Point1 = e.GetCurrentPoint(imgSource).Position;//Set first touchable cordinates as point1
+                Point2 = Point1;
+            }
+        }
+
+        private void imgSource_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            if(isCropEnable)
+            {
+                Point2 = e.GetCurrentPoint(imgSource).Position;
+            }
+        }
+
+        private void imgSource_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if(isCropEnable)
+            {
+                Point2 = e.GetCurrentPoint(imgSource).Position;
+            }
+        }
+
+        private void btnCrop_Click(object sender, RoutedEventArgs e)
+        {
+            isCropEnable = !isCropEnable;
+            rect.Visibility = isCropEnable ? Visibility.Visible : Visibility.Collapsed;
+            scrollView.HorizontalScrollMode = isCropEnable? ScrollMode.Disabled : ScrollMode.Enabled;
+            scrollView.VerticalScrollMode = isCropEnable ? ScrollMode.Disabled : ScrollMode.Enabled;
         }
     }
 }

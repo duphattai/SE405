@@ -28,11 +28,25 @@ namespace AppVer2.SubPage
     public sealed partial class TranslatePage : Page
     {
         private CoreApplicationView view;
+        private Dictionary<string, string> _supportedTranslateLanguage;
+
+        public Dictionary<string, string> SupportedTranslateLanguage
+        {
+            get { return _supportedTranslateLanguage; }
+            set
+            {
+                _supportedTranslateLanguage = value;
+            }
+        }
 
         public TranslatePage()
         {
             this.InitializeComponent();
             view = CoreApplication.GetCurrentView();
+
+            _supportedTranslateLanguage = new Dictionary<string, string>();
+            _supportedTranslateLanguage.Add("vi", "Tiếng Việt");
+            _supportedTranslateLanguage.Add("en", "English");
         }
 
         /// <summary>
@@ -63,9 +77,16 @@ namespace AppVer2.SubPage
                 HideStoryboard.Begin();
         }
 
-        private void Translate_Tapped(object sender, TappedRoutedEventArgs e)
+        private async void Translate_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if(stackPanelTranslate.Height == 0)
+            TranslateText translator = new TranslateText();
+            var targetLang = _supportedTranslateLanguage.Where(o => o.Value == selectedLanguage.SelectedValue.ToString());
+            if(targetLang != null && targetLang.Count() > 0)
+            {
+                txtResult.Text += await translator.Translate(txtResult.Text, targetLang.FirstOrDefault().Key);
+            }
+            
+            if (stackPanelTranslate.Height == 0)
                 ShowStoryboard.Begin();
         }
 
@@ -109,6 +130,12 @@ namespace AppVer2.SubPage
         {
             this.NavigationCacheMode = NavigationCacheMode.Required;
             HardwareButtons.BackPressed += HardwareButtons_BackPressed;
+        }
+
+        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            selectedLanguage.ItemsSource = _supportedTranslateLanguage.Select(o => o.Value);
+            selectedLanguage.SelectedIndex = 0;
         }
     }
 }

@@ -77,9 +77,10 @@
 
                                 <TextBlock Grid.Column="0" VerticalAlignment="Center" Foreground="Black" Margin="10" FontSize="18" Text="Translate to"/>
 
-                                <ComboBox  Grid.Column="1" 
+                                <ComboBox x:Name="selectedLanguage" Grid.Column="1" 
                                            Foreground="Black" FontSize="15"  
-                                           BorderThickness="0" Background="Transparent" />
+                                           BorderThickness="0" Background="Transparent" 
+                                          Loaded="ComboBox_Loaded" />
 
                                 <Image Grid.Column="2" Source="ms-appx:///Images/remove-icon.png" Height="32" Width="32"
                                        Tapped="CloseTranslate_Tapped"/>

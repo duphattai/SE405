@@ -124,7 +124,7 @@ namespace AppVer2.AppVer2_XamlTypeInfo
 
         private void InitTypeTables()
         {
-            _typeNameTable = new string[10];
+            _typeNameTable = new string[14];
             _typeNameTable[0] = "AppVer2.CapturePage";
             _typeNameTable[1] = "Windows.UI.Xaml.Controls.Page";
             _typeNameTable[2] = "Windows.UI.Xaml.Controls.UserControl";
@@ -134,9 +134,13 @@ namespace AppVer2.AppVer2_XamlTypeInfo
             _typeNameTable[6] = "Boolean";
             _typeNameTable[7] = "AppVer2.MainPage";
             _typeNameTable[8] = "AppVer2.SubPage.SendEmailPage";
-            _typeNameTable[9] = "AppVer2.Test";
+            _typeNameTable[9] = "AppVer2.SubPage.TranslatePage";
+            _typeNameTable[10] = "System.Collections.Generic.Dictionary`2<String, String>";
+            _typeNameTable[11] = "Object";
+            _typeNameTable[12] = "String";
+            _typeNameTable[13] = "AppVer2.Test";
 
-            _typeTable = new global::System.Type[10];
+            _typeTable = new global::System.Type[14];
             _typeTable[0] = typeof(global::AppVer2.CapturePage);
             _typeTable[1] = typeof(global::Windows.UI.Xaml.Controls.Page);
             _typeTable[2] = typeof(global::Windows.UI.Xaml.Controls.UserControl);
@@ -146,7 +150,11 @@ namespace AppVer2.AppVer2_XamlTypeInfo
             _typeTable[6] = typeof(global::System.Boolean);
             _typeTable[7] = typeof(global::AppVer2.MainPage);
             _typeTable[8] = typeof(global::AppVer2.SubPage.SendEmailPage);
-            _typeTable[9] = typeof(global::AppVer2.Test);
+            _typeTable[9] = typeof(global::AppVer2.SubPage.TranslatePage);
+            _typeTable[10] = typeof(global::System.Collections.Generic.Dictionary<global::System.String, global::System.String>);
+            _typeTable[11] = typeof(global::System.Object);
+            _typeTable[12] = typeof(global::System.String);
+            _typeTable[13] = typeof(global::AppVer2.Test);
         }
 
         private int LookupTypeIndexByName(string typeName)
@@ -185,7 +193,16 @@ namespace AppVer2.AppVer2_XamlTypeInfo
         private object Activate_3_DrawerLayout() { return new global::DrawerLayout.DrawerLayout(); }
         private object Activate_7_MainPage() { return new global::AppVer2.MainPage(); }
         private object Activate_8_SendEmailPage() { return new global::AppVer2.SubPage.SendEmailPage(); }
-        private object Activate_9_Test() { return new global::AppVer2.Test(); }
+        private object Activate_9_TranslatePage() { return new global::AppVer2.SubPage.TranslatePage(); }
+        private object Activate_10_Dictionary() { return new global::System.Collections.Generic.Dictionary<global::System.String, global::System.String>(); }
+        private object Activate_13_Test() { return new global::AppVer2.Test(); }
+        private void MapAdd_10_Dictionary(object instance, object key, object item)
+        {
+            var collection = (global::System.Collections.Generic.IDictionary<global::System.String, global::System.String>)instance;
+            var newKey = (global::System.String)key;
+            var newItem = (global::System.String)item;
+            collection.Add(newKey, newItem);
+        }
 
         private global::Windows.UI.Xaml.Markup.IXamlType CreateXamlType(int typeIndex)
         {
@@ -245,9 +262,32 @@ namespace AppVer2.AppVer2_XamlTypeInfo
                 xamlType = userType;
                 break;
 
-            case 9:   //  AppVer2.Test
+            case 9:   //  AppVer2.SubPage.TranslatePage
                 userType = new global::AppVer2.AppVer2_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
-                userType.Activator = Activate_9_Test;
+                userType.Activator = Activate_9_TranslatePage;
+                userType.AddMemberName("SupportedTranslateLanguage");
+                userType.SetIsLocalType();
+                xamlType = userType;
+                break;
+
+            case 10:   //  System.Collections.Generic.Dictionary`2<String, String>
+                userType = new global::AppVer2.AppVer2_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Object"));
+                userType.DictionaryAdd = MapAdd_10_Dictionary;
+                userType.SetIsReturnTypeStub();
+                xamlType = userType;
+                break;
+
+            case 11:   //  Object
+                xamlType = new global::AppVer2.AppVer2_XamlTypeInfo.XamlSystemBaseType(typeName, type);
+                break;
+
+            case 12:   //  String
+                xamlType = new global::AppVer2.AppVer2_XamlTypeInfo.XamlSystemBaseType(typeName, type);
+                break;
+
+            case 13:   //  AppVer2.Test
+                userType = new global::AppVer2.AppVer2_XamlTypeInfo.XamlUserType(this, typeName, type, GetXamlTypeByName("Windows.UI.Xaml.Controls.Page"));
+                userType.Activator = Activate_13_Test;
                 userType.SetIsLocalType();
                 xamlType = userType;
                 break;
@@ -266,6 +306,16 @@ namespace AppVer2.AppVer2_XamlTypeInfo
             var that = (global::DrawerLayout.DrawerLayout)instance;
             that.IsDrawerOpen = (global::System.Boolean)Value;
         }
+        private object get_1_TranslatePage_SupportedTranslateLanguage(object instance)
+        {
+            var that = (global::AppVer2.SubPage.TranslatePage)instance;
+            return that.SupportedTranslateLanguage;
+        }
+        private void set_1_TranslatePage_SupportedTranslateLanguage(object instance, object Value)
+        {
+            var that = (global::AppVer2.SubPage.TranslatePage)instance;
+            that.SupportedTranslateLanguage = (global::System.Collections.Generic.Dictionary<global::System.String, global::System.String>)Value;
+        }
 
         private global::Windows.UI.Xaml.Markup.IXamlMember CreateXamlMember(string longMemberName)
         {
@@ -280,6 +330,12 @@ namespace AppVer2.AppVer2_XamlTypeInfo
                 xamlMember.SetIsDependencyProperty();
                 xamlMember.Getter = get_0_DrawerLayout_IsDrawerOpen;
                 xamlMember.Setter = set_0_DrawerLayout_IsDrawerOpen;
+                break;
+            case "AppVer2.SubPage.TranslatePage.SupportedTranslateLanguage":
+                userType = (global::AppVer2.AppVer2_XamlTypeInfo.XamlUserType)GetXamlTypeByName("AppVer2.SubPage.TranslatePage");
+                xamlMember = new global::AppVer2.AppVer2_XamlTypeInfo.XamlMember(this, "SupportedTranslateLanguage", "System.Collections.Generic.Dictionary`2<String, String>");
+                xamlMember.Getter = get_1_TranslatePage_SupportedTranslateLanguage;
+                xamlMember.Setter = set_1_TranslatePage_SupportedTranslateLanguage;
                 break;
             }
             return xamlMember;
