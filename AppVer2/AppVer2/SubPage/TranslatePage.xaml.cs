@@ -56,7 +56,9 @@ namespace AppVer2.SubPage
         /// This parameter is typically used to configure the page.</param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            txtResult.Text = e.Parameter.ToString();
+            var model = e.Parameter as TranslatePageModel;
+            txtResult.Text = model.Text;
+            imgSource.Source = model.Image;
             //System.Windows.Clipboard.SetText(txtResult.Text);
         }
 

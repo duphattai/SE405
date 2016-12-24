@@ -33,7 +33,7 @@ namespace AppVer2
 
             // Check whether is loaded image supported for processing.   
             // Supported image dimensions are between 40 and 2600 pixels.   
-            if (bitmap.PixelHeight < 40 ||
+            if (bitmap.PixelHeight < 10 ||
                 bitmap.PixelHeight > 2600 ||
                 bitmap.PixelWidth < 40 ||
                 bitmap.PixelWidth > 2600)

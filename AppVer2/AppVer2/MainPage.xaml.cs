@@ -194,6 +194,7 @@ namespace AppVer2
 
         async private void ConvertButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            WriteableBitmap temp = wbBitmap;
             string text = "";
             if (wbBitmap == null)
                 text = "Please select an image to convert.";
@@ -205,23 +206,15 @@ namespace AppVer2
                     {
                         int left = Convert.ToInt32((Point1.X < Point2.X) ? Point1.X : Point2.X);
                         int top = Convert.ToInt32((Point1.Y < Point2.Y) ? Point1.Y : Point2.Y);
-                        WriteableBitmap wbCropedBitmap = wbBitmap.Crop(left, top, (int)Math.Abs(Point2.X - Point1.X), (int)Math.Abs(Point2.Y - Point1.Y));
-                        text = await extract.ExtractText(wbCropedBitmap, imgSource, 16, _language);
+                        temp = wbBitmap.Crop(left, top, (int)Math.Abs(Point2.X - Point1.X), (int)Math.Abs(Point2.Y - Point1.Y));
                     }
-                    else
-                    {
-                        text = await extract.ExtractText(wbBitmap, imgSource, 16, _language);
-                    }
-                }
-                else
-                {
-                    text = await extract.ExtractText(wbBitmap, imgSource, 16, _language);
                 }
             }
 
+            text = await extract.ExtractText(temp, imgSource, 16, _language);
 
-
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(TranslatePage), text));
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(TranslatePage), 
+                new TranslatePageModel { Text = text, Image = temp }));
         }
 
         async private void Camera_Click(object sender, RoutedEventArgs e)
@@ -286,8 +279,9 @@ namespace AppVer2
         {
             isCropEnable = !isCropEnable;
             rect.Visibility = isCropEnable ? Visibility.Visible : Visibility.Collapsed;
-            scrollView.HorizontalScrollMode = isCropEnable? ScrollMode.Disabled : ScrollMode.Enabled;
+            scrollView.HorizontalScrollMode = isCropEnable ? ScrollMode.Disabled : ScrollMode.Enabled;
             scrollView.VerticalScrollMode = isCropEnable ? ScrollMode.Disabled : ScrollMode.Enabled;
+            scrollView.ZoomMode = isCropEnable ? ZoomMode.Disabled : ZoomMode.Enabled;
         }
     }
 }
