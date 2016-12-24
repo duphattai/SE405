@@ -11,6 +11,7 @@ using Windows.Phone.UI.Input;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -29,6 +30,7 @@ namespace AppVer2.SubPage
     {
         private CoreApplicationView view;
         private Dictionary<string, string> _supportedTranslateLanguage;
+        private string _textBeforeTranslate;
 
         public Dictionary<string, string> SupportedTranslateLanguage
         {
@@ -45,7 +47,7 @@ namespace AppVer2.SubPage
             view = CoreApplication.GetCurrentView();
 
             _supportedTranslateLanguage = new Dictionary<string, string>();
-            _supportedTranslateLanguage.Add("vi", "Tiếng Việt");
+            _supportedTranslateLanguage.Add("vi", "Vietnamese");
             _supportedTranslateLanguage.Add("en", "English");
         }
 
@@ -57,7 +59,8 @@ namespace AppVer2.SubPage
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             var model = e.Parameter as TranslatePageModel;
-            txtResult.Text = model.Text;
+            _textBeforeTranslate = model.Text;
+            txtResult.Text = _textBeforeTranslate;
             imgSource.Source = model.Image;
             //System.Windows.Clipboard.SetText(txtResult.Text);
         }
@@ -77,6 +80,8 @@ namespace AppVer2.SubPage
         {
             if (stackPanelTranslate.Height != 0)
                 HideStoryboard.Begin();
+
+            txtResult.Text = _textBeforeTranslate;
         }
 
         private async void Translate_Tapped(object sender, TappedRoutedEventArgs e)
@@ -85,7 +90,7 @@ namespace AppVer2.SubPage
             var targetLang = _supportedTranslateLanguage.Where(o => o.Value == selectedLanguage.SelectedValue.ToString());
             if(targetLang != null && targetLang.Count() > 0)
             {
-                txtResult.Text += await translator.Translate(txtResult.Text, targetLang.FirstOrDefault().Key);
+                txtResult.Text = await translator.Translate(txtResult.Text, targetLang.FirstOrDefault().Key);
             }
             
             if (stackPanelTranslate.Height == 0)
@@ -138,6 +143,23 @@ namespace AppVer2.SubPage
         {
             selectedLanguage.ItemsSource = _supportedTranslateLanguage.Select(o => o.Value);
             selectedLanguage.SelectedIndex = 0;
+        }
+
+        private void stackPanelTranslate_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (stackPanelTranslate.ActualHeight == 0)
+            {
+                scrollViewer.Height = stackPanelText.ActualHeight + 54;
+            }
+            else if (stackPanelTranslate.ActualHeight == 54)
+            {
+                scrollViewer.Height = stackPanelText.ActualHeight - 54;
+            }
+        }
+
+        async private void SendEmailButton_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Frame.Navigate(typeof(SendEmailPage)));
         }
     }
 }

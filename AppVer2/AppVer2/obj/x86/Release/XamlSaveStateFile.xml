@@ -1,6 +1,5 @@
 <XamlCompilerSaveState>
   <ReferenceAssemblyList>
-    <LocalAssembly PathName="d:\projects\newmobile\appver2\appver2\obj\x86\release\intermediatexaml\appver2.exe" HashGuid="9dfbf74f-e867-6047-00ea-615e9e3aaf46" />
     <ReferenceAssembly PathName="c:\program files (x86)\microsoft sdks\windowsphoneapp\v8.1\extensionsdks\microsoft.vclibs\12.0\references\commonconfiguration\neutral\platform.winmd" HashGuid="58b6b6d1-928e-9908-9804-eb460e5e101b" />
     <ReferenceAssembly PathName="c:\users\tai\desktop\se405.git\appver2\packages\drawerlayout.1.0.4\lib\drawerlayout.dll" HashGuid="b0d3b3f8-90b7-6a66-b416-66f64dcf26fa" />
     <ReferenceAssembly PathName="c:\users\tai\desktop\se405.git\appver2\packages\newtonsoft.json.9.0.1\lib\portable-net45+wp80+win8+wpa81\newtonsoft.json.dll" HashGuid="424e6aa8-ba94-c678-e707-af9fe9838e1a" />

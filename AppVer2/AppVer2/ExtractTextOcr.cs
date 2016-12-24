@@ -111,7 +111,7 @@ namespace AppVer2
                         // Put the filled textblock in the results grid.   
                         extractedText += word.Text + " ";
                     }
-                    extractedText += Environment.NewLine;
+                    extractedText += " ";
                 }
 
                 text = extractedText;

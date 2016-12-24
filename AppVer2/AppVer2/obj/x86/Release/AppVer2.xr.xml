@@ -59,6 +59,7 @@
       <RootProperty Name="Height" />
       <RootProperty Name="Margin" />
       <RootProperty Name="Resources" />
+      <RootProperty Name="Width" />
       <RootProperty Name="VerticalAlignment" />
       <RootEvent Name="Loaded" />
       <RootMethod Name="GetColumnSpan" />
@@ -119,6 +120,7 @@
       <RootProperty Name="Height" />
       <RootProperty Name="VerticalAlignment" />
       <RootEvent Name="Tapped" />
+      <RootEvent Name="SizeChanged" />
     </RootType>
     <RootType FullName="Windows.UI.Xaml.Controls.ComboBox">
       <RootProperty Name="Margin" />
@@ -140,13 +142,17 @@
       <RootProperty Name="HorizontalScrollBarVisibility" />
       <RootProperty Name="Height" />
       <RootProperty Name="Content" />
+      <RootProperty Name="VerticalScrollMode" />
+      <RootProperty Name="AllowDrop" />
+      <RootProperty Name="BringIntoViewOnFocusChange" />
+      <RootProperty Name="HorizontalScrollMode" />
+      <RootProperty Name="IsHoldingEnabled" />
       <RootMethod Name="GetVerticalScrollBarVisibility" />
       <RootMethod Name="SetVerticalScrollBarVisibility" />
-      <RootMethod Name="GetHorizontalScrollBarVisibility" />
-      <RootMethod Name="SetHorizontalScrollBarVisibility" />
     </RootType>
     <RootType FullName="Windows.UI.Xaml.Controls.Canvas">
       <RootProperty Name="Height" />
+      <RootProperty Name="Width" />
       <RootProperty Name="Children" />
     </RootType>
     <RootType FullName="Windows.UI.Xaml.Shapes.Rectangle">

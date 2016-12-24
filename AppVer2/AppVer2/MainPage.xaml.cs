@@ -80,7 +80,7 @@ namespace AppVer2
                 imgSource.Source = bmpImage;
 
                 var stream = await GlobalVariable.filecapture.OpenAsync(FileAccessMode.Read);
-                wbBitmap = new WriteableBitmap((int)imgSource.Width, (int)imgSource.Height);
+                wbBitmap = new WriteableBitmap((int)imgSource.ActualWidth, (int)imgSource.ActualHeight);
                 wbBitmap.SetSource(stream);
             }
         }
@@ -194,7 +194,7 @@ namespace AppVer2
 
         async private void ConvertButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            WriteableBitmap temp = wbBitmap;
+            WriteableBitmap temp = wbBitmap.Resize(Convert.ToInt32(imgSource.ActualWidth), Convert.ToInt32(imgSource.ActualHeight), WriteableBitmapExtensions.Interpolation.NearestNeighbor);
             string text = "";
             if (wbBitmap == null)
                 text = "Please select an image to convert.";
@@ -206,9 +206,17 @@ namespace AppVer2
                     {
                         int left = Convert.ToInt32((Point1.X < Point2.X) ? Point1.X : Point2.X);
                         int top = Convert.ToInt32((Point1.Y < Point2.Y) ? Point1.Y : Point2.Y);
-                        temp = wbBitmap.Crop(left, top, (int)Math.Abs(Point2.X - Point1.X), (int)Math.Abs(Point2.Y - Point1.Y));
+                        temp = temp.Crop(left, top, (int)Math.Abs(Point2.X - Point1.X), (int)Math.Abs(Point2.Y - Point1.Y));
+
                     }
                 }
+            }
+
+            double min = Math.Min(temp.PixelWidth, temp.PixelHeight);
+            if(min < 40)
+            {
+                double scale = 50 / min;
+                temp = temp.Resize(Convert.ToInt32(temp.PixelWidth * scale), Convert.ToInt32(temp.PixelHeight * scale), WriteableBitmapExtensions.Interpolation.NearestNeighbor);
             }
 
             text = await extract.ExtractText(temp, imgSource, 16, _language);
@@ -254,7 +262,7 @@ namespace AppVer2
         {
             if(isCropEnable)
             {
-                Point1 = e.GetCurrentPoint(imgSource).Position;//Set first touchable cordinates as point1
+                Point1 = e.GetCurrentPoint(gridImage).Position;//Set first touchable cordinates as point1
                 Point2 = Point1;
             }
         }
@@ -263,7 +271,7 @@ namespace AppVer2
         {
             if(isCropEnable)
             {
-                Point2 = e.GetCurrentPoint(imgSource).Position;
+                Point2 = e.GetCurrentPoint(gridImage).Position;
             }
         }
 
@@ -271,7 +279,7 @@ namespace AppVer2
         {
             if(isCropEnable)
             {
-                Point2 = e.GetCurrentPoint(imgSource).Position;
+                Point2 = e.GetCurrentPoint(gridImage).Position;
             }
         }
 

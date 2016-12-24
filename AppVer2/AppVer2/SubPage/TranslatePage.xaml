@@ -66,7 +66,7 @@
 
 
                     <!-- translate -->
-                    <StackPanel x:Name="stackPanelTranslate" Height="54" Background="#00ffff" VerticalAlignment="Top" Margin="0" Grid.Row="1">
+                    <StackPanel x:Name="stackPanelTranslate" Height="54" Background="#00ffff" VerticalAlignment="Top" Margin="0" Grid.Row="1" SizeChanged="stackPanelTranslate_SizeChanged">
                         <Border BorderBrush="CadetBlue" BorderThickness="1">
                             <Grid >
                                 <Grid.ColumnDefinitions>
@@ -89,11 +89,12 @@
                     </StackPanel>
 
                     <!-- text -->
-                    <TextBlock  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                    ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                                    TextWrapping="Wrap" FontSize="16"
+                    <ScrollViewer x:Name="scrollViewer" VerticalScrollBarVisibility="Visible" VerticalScrollMode="Enabled" 
+                                  AllowDrop="False" BringIntoViewOnFocusChange="True" HorizontalScrollMode="Disabled" IsHoldingEnabled="True">
+                        <TextBlock  TextWrapping="Wrap" FontSize="16"
                                     Foreground="Black" x:Name="txtResult"
                                     Text="Result" Padding="10" />
+                    </ScrollViewer>
                 </StackPanel>
 
 
@@ -118,7 +119,7 @@
                         </Button>
 
                         <Button Style="{StaticResource circleButton}" Grid.Column="3" Margin="0">
-                            <Image Height="32" Source="ms-appx:///Images/email-icon.png"/>
+                            <Image Tapped="SendEmailButton_Tapped"  Height="32" Source="ms-appx:///Images/email-icon.png"/>
                         </Button>
                     </Grid>
                 </StackPanel>

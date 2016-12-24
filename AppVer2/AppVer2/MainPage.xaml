@@ -31,7 +31,7 @@
         <drawerLayout:DrawerLayout Grid.Row="1"  x:Name="DrawerLayout">
             <Grid x:Name="MainFragment">
                 <!-- Main Content goes here -->
-                <Grid VerticalAlignment="Stretch" x:Name="HomeFragment">
+                <Grid x:Name="HomeFragment">
 
                     <Grid.RowDefinitions>
                         <RowDefinition Height="9*"/>
@@ -40,16 +40,38 @@
 
 
                     <!-- image -->
-                    <StackPanel x:Name="stackPanelImage" Margin="0,10,0,10" Grid.Row="0">
+                    <!--<StackPanel x:Name="stackPanelImage" Margin="0,10,0,10" Grid.Row="0">
                         <ScrollViewer x:Name="scrollView" ZoomMode="Enabled" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" 
                                       Height="{Binding Path=ActualHeight,ElementName=stackPanelImage}">
-                            <Canvas Height="{Binding Path=ActualHeight,ElementName=stackPanelImage}">
-                                <Image x:Name="imgSource" Source="Assets/Logo.png" PointerMoved="imgSource_PointerMoved" PointerPressed="imgSource_PointerPressed" PointerReleased="imgSource_PointerReleased"/>
-                                <Rectangle x:Name="rect" StrokeThickness="4" Stroke="#FFEA18A7"></Rectangle>
+                            
+                            <Canvas Height="{Binding Path=ActualHeight,ElementName=stackPanelImage}"
+                                    Width="{Binding Path=ActualWidth,ElementName=stackPanelImage}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Image x:Name="imgSource" Source="Assets/Logo.png" PointerMoved="imgSource_PointerMoved" PointerPressed="imgSource_PointerPressed" 
+                                       PointerReleased="imgSource_PointerReleased" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                <Rectangle x:Name="rect" StrokeThickness="2" Stroke="#FFEA18A7"></Rectangle>
+                            </Canvas>
+                        </ScrollViewer>
+                    </StackPanel>-->
+
+                    <StackPanel x:Name="stackPanelImage" Margin="0,10,0,10" Grid.Row="0">
+                        <ScrollViewer x:Name="scrollView" ZoomMode="Enabled" VerticalScrollBarVisibility="Visible" 
+                                      HorizontalScrollBarVisibility="Visible"
+                                      Height="{Binding Path=ActualHeight,ElementName=stackPanelImage}">
+
+                            <Canvas Height="{Binding Path=ActualHeight,ElementName=stackPanelImage}"
+                                    Width="{Binding Path=ActualWidth,ElementName=stackPanelImage}">
+                                <Grid x:Name="gridImage" Width="{Binding ActualWidth, ElementName=stackPanelImage}" 
+                                      Height="{Binding ActualHeight, ElementName=stackPanelImage}">
+                                    <Image x:Name="imgSource" Source="Assets/Logo.png" PointerMoved="imgSource_PointerMoved" PointerPressed="imgSource_PointerPressed" 
+                                       PointerReleased="imgSource_PointerReleased" VerticalAlignment="Top"/>
+                                </Grid>
+                                <Rectangle x:Name="rect" StrokeThickness="2" Stroke="#FFEA18A7"></Rectangle>
                             </Canvas>
                         </ScrollViewer>
                     </StackPanel>
-                    
+
+
+
 
                     <StackPanel Grid.Row="1" Background="White" Margin="0">
                         <Grid>
